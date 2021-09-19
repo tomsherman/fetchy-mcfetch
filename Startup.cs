@@ -9,14 +9,19 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FetchPoints;
 
-namespace fetch_points
+namespace FetchPoints
 {
     public class Startup
     {
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+
+            // fake it until you make it
+            FakeData.DataSource.PopulateFakeData();
         }
 
         public IConfiguration Configuration { get; }
