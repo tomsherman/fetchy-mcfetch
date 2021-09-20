@@ -1,15 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FetchPoints;
 
 namespace FetchPoints
 {
@@ -19,10 +12,6 @@ namespace FetchPoints
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-
-            // fake it until you make it
-            // todo remove
-            FakeData.DataSource.populateFakeData();
         }
 
         public IConfiguration Configuration { get; }

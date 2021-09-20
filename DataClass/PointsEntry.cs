@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 using FetchPoints.Input;
 
 namespace FetchPoints.DataClass
 {
+    /// <summary>
+    /// Represents points associated to a payer and timestamp. Can be a credit (positive points)
+    /// or debit (negative points).
+    /// </summary>
     public class PointsEntry : IComparable<PointsEntry>
     {
 
@@ -38,6 +39,7 @@ namespace FetchPoints.DataClass
 
         #region "Constructors"
 
+        // private constructor. force usage of factory methods
         private PointsEntry(string payer, int points, DateTime timestamp) 
         {
             this.payer = payer;
@@ -61,6 +63,11 @@ namespace FetchPoints.DataClass
             return new PointsEntry(payer, -1 * points, timestamp);
         }
 
+        /// <summary>
+        /// Creates a new credit from an input request
+        /// </summary>
+        /// <param name="request">An input request submitted via the API</param>
+        /// <returns></returns>
         public static PointsEntry CreateCreditFromRequest(CreditRequest request)
         {
             return CreateCredit(request.payer, request.points, request.timestamp);
@@ -70,6 +77,9 @@ namespace FetchPoints.DataClass
 
         #region "Comparers"
 
+        /// <summary>
+        /// Sorts oldest points entries first.
+        /// </summary>
         public int CompareTo([AllowNull] PointsEntry other)
         {
             if (timestamp > other.timestamp)

@@ -48,7 +48,7 @@ namespace FetchPoints.Controller
         }
 
         // PUT api/points
-        [HttpPut]
+        [HttpPut("fake-it")]
         public void Put()
         {
             DataRetriever.populateFakeData();

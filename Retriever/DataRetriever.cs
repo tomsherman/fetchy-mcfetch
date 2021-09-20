@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using FetchPoints.DataClass;
 using FetchPoints.FakeData;
 
 namespace FetchPoints.Retriever
 {
+    /// <summary>
+    /// This class mimics a retriever that would typically talk to a data store. But here we're faking it.
+    /// </summary>
     internal class DataRetriever
     {
+        #region "Methods"
+
         internal static IEnumerable<PointsEntry> getEntries()
         {
             return DataSource.getEntries();
@@ -28,6 +31,8 @@ namespace FetchPoints.Retriever
         {
             DataSource.clearData();
         }
+
+        #endregion
 
         #region "Fake stuff"
 
