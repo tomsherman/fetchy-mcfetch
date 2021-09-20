@@ -4,25 +4,50 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FetchPoints.DataClasses
+namespace FetchPoints.DataClass
 {
     public class PointsEntry : IComparable<PointsEntry>
     {
-        public string Payer { get; }
 
-        public int Points { get; }
+        #region "Properties"
 
-        public DateTime Timestamp { get; }
+        public string payer { get; }
 
-    // private constructor
-        private PointsEntry(string payer, int points, DateTime timestamp) 
+        public DateTime timestamp { get; }
+
+        public int points { get; }
+
+        internal bool isCredit
         {
-            Payer = payer;
-            Points = points;
-            Timestamp = timestamp;
+            get
+            {
+                return (points > 0);
+            }
         }
 
-    // factory methods
+        internal bool isDebit
+        {
+            get
+            {
+                return (points < 0);
+            }
+        }
+
+        #endregion
+
+        #region "Constructors"
+
+        private PointsEntry(string payer, int points, DateTime timestamp) 
+        {
+            this.payer = payer;
+            this.points = points;
+            this.timestamp = timestamp;
+        }
+
+        #endregion
+
+        #region "Factory methods"
+
         public static PointsEntry CreateCredit(string payer, int points, DateTime timestamp)
         {
             if (points <= 0) throw new ArgumentOutOfRangeException("Points specified must be positive");
@@ -35,14 +60,17 @@ namespace FetchPoints.DataClasses
             return new PointsEntry(payer, -1 * points, timestamp);
         }
 
+        #endregion
+
+        #region "Comparers"
+
         public int CompareTo([AllowNull] PointsEntry other)
         {
-
             // todo switch statement?
-            if (Timestamp > other.Timestamp)
+            if (timestamp > other.timestamp)
             {
                 return 1;
-            } else if (Timestamp < other.Timestamp)
+            } else if (timestamp < other.timestamp)
             {
                 return -1;
             } else
@@ -50,5 +78,8 @@ namespace FetchPoints.DataClasses
                 return 0;
             }
         }
+
+        #endregion
+
     }
 }

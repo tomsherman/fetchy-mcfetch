@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FetchPoints.DataClasses;
+using FetchPoints.DataClass;
 
 namespace FetchPoints.FakeData
 {
@@ -10,8 +10,18 @@ namespace FetchPoints.FakeData
     {
         static List<PointsEntry> fakeData;
 
-    #region "Methods called by controller"
-        internal static void PopulateFakeData() {
+        internal static IEnumerable<PointsEntry> getEntries()
+        {
+            return fakeData;
+        }
+
+        internal static void commitDebits(IEnumerable<PointsEntry> debits)
+        {
+            fakeData.AddRange(debits);
+        }
+
+        internal static void populateFakeData()
+        {
             fakeData = new List<PointsEntry>
             {
                 PointsEntry.CreateCredit("DANNON", 1000, DateTime.Parse("2020-11-02T14:00:00Z")),
@@ -20,45 +30,6 @@ namespace FetchPoints.FakeData
                 PointsEntry.CreateCredit("MILLER COORS", 10000, DateTime.Parse("2020-11-01T14:00:00Z")),
                 PointsEntry.CreateCredit("DANNON", 300, DateTime.Parse("2020-10-31T10:00:00Z")),
             };
-        }
-
-        internal static IEnumerable<PointsEntry> GetEntries()
-        {
-            return fakeData;
-        }
-
-        public static int GetBalance(string payer)
-        {
-            var balance = 0;
-
-            foreach(PointsEntry entry in GetEntries())
-            {
-                if (entry.Payer == payer)
-                {
-                    balance += entry.Points;
-                }
-            }
-
-            return balance;
-        }
-
-        #endregion
-
-        public static int Spend(string payer, int points)
-        {
-            var spentPoints = 0;
-            var balance = GetBalance(payer);
-
-            // spend no more than is available
-            var spendablePoints = Math.Min(points, balance);
-
-            if (spendablePoints > 0) 
-            {
-                fakeData.Add(new PointsEntry { Payer = payer, Points = -1 * spendablePoints, Timestamp = DateTime.Now });
-                spentPoints = spendablePoints;
-            }
-
-            return spentPoints;
         }
 
     }

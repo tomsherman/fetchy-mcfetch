@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FetchPoints.DataClasses;
+using FetchPoints.DataClass;
+using FetchPoints.Retriever;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace FetchPoints.Controllers
+namespace FetchPoints.Controller
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -17,7 +18,7 @@ namespace FetchPoints.Controllers
         [HttpGet]
         public IEnumerable<PointsEntry> Get()
         {
-            return FakeData.DataSource.GetEntries();
+            return DataRetriever.getEntries();
         }
 
         //// GET api/<ValuesController>/5
@@ -27,17 +28,21 @@ namespace FetchPoints.Controllers
         //    return "value";
         //}
 
+        // todo try/catch
+
         // POST api/<ValuesController>
         [HttpPost]
         public List<PointsEntry> Post([FromBody] int points) // todo needs to be {"points":500}
         {
-            return FakeData.DataSource.Spend(points);
+            // glossing over all user auth here
+            var userPoints = UserPoints.create();
+            return userPoints.spend(points);
         }
 
         [HttpPut]
         public void Put()
         {
-            FakeData.DataSource.PopulateFakeData();
+            DataRetriever.populateFakeData();
         }
 
         //// PUT api/<ValuesController>/5

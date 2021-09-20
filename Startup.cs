@@ -22,7 +22,7 @@ namespace FetchPoints
 
             // fake it until you make it
             // todo remove
-            FakeData.DataSource.PopulateFakeData();
+            FakeData.DataSource.populateFakeData();
         }
 
         public IConfiguration Configuration { get; }
