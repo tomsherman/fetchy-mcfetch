@@ -33,18 +33,20 @@ namespace FetchPoints.FakeData
         /// <param name="credit"></param>
         internal static void addCredit(PointsEntry credit)
         {
+            var isNew = true;
+
             foreach (PointsEntry entry in entries)
             {
                 if (entry.payer == credit.payer
                     && entry.points == entry.points
                     && entry.timestamp == entry.timestamp)
                 {
-                    // duplicate; don't add
-                } else
-                {
-                    entries.Add(credit);
+                    isNew = false;
+                    break;
                 }
             }
+            
+            if (isNew) entries.Add(credit);
         }
 
         /// <summary>

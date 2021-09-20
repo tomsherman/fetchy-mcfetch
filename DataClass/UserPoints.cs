@@ -57,6 +57,18 @@ namespace FetchPoints.DataClass
             return balance;
         }
 
+        internal List<PointsEntry> getPayerBalances()
+        {
+            var payerBalances = new List<PointsEntry>();
+            foreach(PayerLedger ledger in ledgerDictionary.Values)
+            {
+                var balance = ledger.getBalance();
+                if (balance > 0) payerBalances.Add(PointsEntry.CreateCredit(ledger.payer, balance, DateTime.Now));
+            }
+            return payerBalances;
+        }
+
+
         public List<PointsEntry> spend(int points)
         {
             var ledgers = ledgerDictionary.Values.ToList();

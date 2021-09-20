@@ -8,7 +8,7 @@ using FetchPoints.Input;
 
 namespace FetchPoints.Controller
 {
-    [Route("api/[controller]")]
+    [Route("api/points")]
     [ApiController]
     public class PointsController : ControllerBase
     {
@@ -16,7 +16,8 @@ namespace FetchPoints.Controller
         [HttpGet]
         public IEnumerable<PointsEntry> Get()
         {
-            return DataRetriever.getEntries();
+            var userPoints = UserPoints.create();
+            return userPoints.getPayerBalances();
         }
 
         // POST api/points

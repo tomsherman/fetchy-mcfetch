@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using FetchPoints.Input;
 
 namespace FetchPoints.DataClass
@@ -15,6 +16,7 @@ namespace FetchPoints.DataClass
 
         public string payer { get; }
 
+        [JsonIgnore]
         public DateTime timestamp { get; }
 
         public int points { get; }
