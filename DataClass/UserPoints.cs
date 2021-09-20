@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FetchPoints.Retriever;
+using FetchPoints.ApiException;
 
 namespace FetchPoints.DataClass
 {
@@ -63,7 +64,7 @@ namespace FetchPoints.DataClass
             var newDebits = new List<PointsEntry>();
 
             var overallBalance = ledgers.Sum(ledger => ledger.getBalance());
-            if (points > overallBalance) throw new Exception("Insufficient points.");
+            if (points > overallBalance) throw new InsufficientPointsException();
 
             var pointsToSpend = points;
             while(pointsToSpend > 0)

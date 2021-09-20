@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FetchPoints.DataClass;
 using FetchPoints.Retriever;
+using FetchPoints.ApiException;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -34,9 +35,20 @@ namespace FetchPoints.Controller
         [HttpPost]
         public List<PointsEntry> Post([FromBody] int points) // todo needs to be {"points":500}
         {
-            // glossing over all user auth here
-            var userPoints = UserPoints.create();
-            return userPoints.spend(points);
+            try
+            {
+                // glossing over all user auth here
+                var userPoints = UserPoints.create();
+                return userPoints.spend(points);
+            } catch(InsufficientPointsException)
+            {
+                Response.StatusCode = 412;
+                return null;
+            } catch(Exception)
+            {
+                Response.StatusCode = 500;
+                return null;
+            }
         }
 
         [HttpPut]
