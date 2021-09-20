@@ -7,7 +7,7 @@ namespace FetchPoints.FakeData
     internal class DataSource
     {
         // in-memory store of entries
-        static List<PointsEntry> entries;
+        static List<PointsEntry> entries = new List<PointsEntry>();
 
         /// <summary>
         /// Returns all entries, both debits and credits.
