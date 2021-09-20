@@ -21,6 +21,7 @@ namespace FetchPoints
             Configuration = configuration;
 
             // fake it until you make it
+            // todo remove
             FakeData.DataSource.PopulateFakeData();
         }
 

@@ -6,19 +6,23 @@ using FetchPoints.DataClasses;
 
 namespace FetchPoints.FakeData
 {
-    public class DataSource
+    internal class DataSource
     {
         static List<PointsEntry> fakeData;
 
-        public static void PopulateFakeData() {
+    #region "Methods called by controller"
+        internal static void PopulateFakeData() {
             fakeData = new List<PointsEntry>
             {
-                new PointsEntry() { Payer = "Tom", Points = 1000, Timestamp = DateTime.Now },
-                new PointsEntry() { Payer = "Joe", Points = 200, Timestamp = DateTime.Now }
+                PointsEntry.CreateCredit("DANNON", 1000, DateTime.Parse("2020-11-02T14:00:00Z")),
+                PointsEntry.CreateCredit("UNILEVER", 200, DateTime.Parse("2020-10-31T11:00:00Z")),
+                PointsEntry.CreateDebit("DANNON", 200, DateTime.Parse("2020-10-31T15:00:00Z")),
+                PointsEntry.CreateCredit("MILLER COORS", 10000, DateTime.Parse("2020-11-01T14:00:00Z")),
+                PointsEntry.CreateCredit("DANNON", 300, DateTime.Parse("2020-10-31T10:00:00Z")),
             };
         }
 
-        public static IEnumerable<PointsEntry> GetEntries()
+        internal static IEnumerable<PointsEntry> GetEntries()
         {
             return fakeData;
         }
@@ -37,6 +41,8 @@ namespace FetchPoints.FakeData
 
             return balance;
         }
+
+        #endregion
 
         public static int Spend(string payer, int points)
         {

@@ -29,9 +29,15 @@ namespace FetchPoints.Controllers
 
         // POST api/<ValuesController>
         [HttpPost]
-        public void Post([FromBody] PointsEntry entry)
+        public List<PointsEntry> Post([FromBody] int points) // todo needs to be {"points":500}
         {
-            FakeData.DataSource.Spend(entry.Payer, entry.Points);
+            return FakeData.DataSource.Spend(points);
+        }
+
+        [HttpPut]
+        public void Put()
+        {
+            FakeData.DataSource.PopulateFakeData();
         }
 
         //// PUT api/<ValuesController>/5
