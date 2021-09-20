@@ -8,21 +8,42 @@ namespace FetchPoints.FakeData
 {
     internal class DataSource
     {
-        static List<PointsEntry> fakeData;
+        static List<PointsEntry> entries;
 
         internal static IEnumerable<PointsEntry> getEntries()
         {
-            return fakeData;
+            return entries;
         }
 
         internal static void commitDebits(IEnumerable<PointsEntry> debits)
         {
-            fakeData.AddRange(debits);
+            entries.AddRange(debits);
+        }
+
+        internal static void addCredit(PointsEntry credit)
+        {
+            foreach (PointsEntry entry in entries)
+            {
+                if (entry.payer == credit.payer
+                    && entry.points == entry.points
+                    && entry.timestamp == entry.timestamp)
+                {
+                    // duplicate; don't add
+                } else
+                {
+                    entries.Add(credit);
+                }
+            }
+        }
+
+        internal static void clearData()
+        {
+            entries = new List<PointsEntry>();
         }
 
         internal static void populateFakeData()
         {
-            fakeData = new List<PointsEntry>
+            entries = new List<PointsEntry>
             {
                 PointsEntry.CreateCredit("DANNON", 1000, DateTime.Parse("2020-11-02T14:00:00Z")),
                 PointsEntry.CreateCredit("UNILEVER", 200, DateTime.Parse("2020-10-31T11:00:00Z")),

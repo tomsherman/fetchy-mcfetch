@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using FetchPoints.Input;
 
 namespace FetchPoints.DataClass
 {
@@ -60,13 +61,17 @@ namespace FetchPoints.DataClass
             return new PointsEntry(payer, -1 * points, timestamp);
         }
 
+        public static PointsEntry CreateCreditFromRequest(CreditRequest request)
+        {
+            return CreateCredit(request.payer, request.points, request.timestamp);
+        }
+
         #endregion
 
         #region "Comparers"
 
         public int CompareTo([AllowNull] PointsEntry other)
         {
-            // todo switch statement?
             if (timestamp > other.timestamp)
             {
                 return 1;
