@@ -38,8 +38,8 @@ namespace FetchPoints.FakeData
             foreach (PointsEntry entry in entries)
             {
                 if (entry.payer == credit.payer
-                    && entry.points == entry.points
-                    && entry.timestamp == entry.timestamp)
+                    && entry.points == credit.points
+                    && entry.timestamp == credit.timestamp)
                 {
                     isNew = false;
                     break;

@@ -25,7 +25,7 @@ namespace FetchPoints
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "fetch-points", Version = "v1" });
-                c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First()); //This line
+                c.EnableAnnotations();
             });
         }
 
