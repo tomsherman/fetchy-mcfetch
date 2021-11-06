@@ -1,6 +1,6 @@
 # fetchy-mcfetch
 
-- This project was developed to meet [this coding challenge](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf)
+- This project was developed to solve a [coding challenge](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf) from [Fetch Rewards](https://fetchrewards.com/).
 
 ## Implementation
 - [Swagger documentation](https://fetch-points20210919001315.azurewebsites.net/)
