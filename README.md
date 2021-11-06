@@ -1,5 +1,8 @@
 # fetchy-mcfetch
 
+- This project was developed to meet [this coding challenge](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf)
+
+## Implementation
 - [Swagger documentation](https://fetch-points20210919001315.azurewebsites.net/)
 - [API base endpoint](https://fetch-points20210919001315.azurewebsites.net/api/points)
   - Use standard HTTP verbs to interact with the API
