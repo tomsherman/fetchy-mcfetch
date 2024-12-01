@@ -1,12 +1,10 @@
 using System;
-using System.Reflection.Metadata;
 using System.Globalization;
-using FetchPoints;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http.Features;
-using System.Runtime.Serialization;
 
-namespace FetchPoints.DataClass {
+using FetchPoints.API.Request;
+
+namespace FetchPoints.Entity {
 
     public class ValidatedTransaction
     {
@@ -26,7 +24,7 @@ namespace FetchPoints.DataClass {
 
         // Factory method; perform validation
         // If invalid, returns null
-        public static ValidatedTransaction Create(Input.Receipt receipt) {
+        public static ValidatedTransaction Create(Receipt receipt) {
             CultureInfo enUS = new CultureInfo("en-US");
 
             // Example:

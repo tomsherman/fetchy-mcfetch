@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Collections.Generic;
-using FetchPoints.DataClass;
-using FetchPoints.Input;
-using Swashbuckle.AspNetCore.Annotations;
-using FetchPoints.Response;
+
+using FetchPoints.API.Request;
+using FetchPoints.API.Response;
+using FetchPoints.Entity;
 using FetchPoints.PersistedData;
+using System.Linq;
 
 namespace FetchPoints.Controller
 {
@@ -18,34 +20,39 @@ namespace FetchPoints.Controller
         [SwaggerOperation("Submits a receipt for processing")]
         [SwaggerResponse(200, "Returns the ID assigned to the receipt")]
         [SwaggerResponse(400, "The receipt is invalid")]
-        public ApiResponse Post([FromBody] Receipt request)
+        public Result Post([FromBody] Receipt request)
         {
-            ApiResponse response;
+            Result result;
             try {
                 var transaction = ValidatedTransaction.Create(request);
                 ValidatedTransactionsStore.add(transaction);
-                response = ApiResponse.CreateSuccessfulResponse(transaction.Id(), transaction.Points());
+                result = Result.CreateSuccessfulResponse(transaction);
             } catch(Exception ex) {
-                response = ApiResponse.CreateErrorResponse(ex.Message);
+                result = Result.CreateErrorResponse(ex.Message);
             }
-            return response;
+            return result;
         }
 
         [HttpGet("list")]
         [SwaggerOperation("Lists valid and persisted submitted receipts")]
-        public IEnumerable<ValidatedTransaction> Get()
+        public IEnumerable<Result> Get()
         {
-            return  ValidatedTransactionsStore.getAll();
+            var results = new List<Result>();
+            var transactions = ValidatedTransactionsStore.getAll();
+            transactions.ToList().ForEach((transaction) => {
+                results.Add(Result.CreateSuccessfulResponse(transaction));
+            });
+            return results;
         }
 
         [HttpGet("{id}/points")]
         [SwaggerOperation("Returns validated receipt, or null if not found")]
-        public ApiResponse Get(string id) {
+        public Result Get(string id) {
             var transaction = ValidatedTransactionsStore.get(id);
             if (transaction != null) {
-                return ApiResponse.CreateSuccessfulResponse(transaction.Id(), transaction.Points());
+                return Result.CreateSuccessfulResponse(transaction);
             } else {
-                return ApiResponse.CreateErrorResponse("Receipt not found");
+                return Result.CreateErrorResponse("Receipt not found");
             }
         }
     }

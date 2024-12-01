@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace FetchPoints.Input
+namespace FetchPoints.API.Request
 {
     /// <summary>
     /// Represents a request, submitted via the API, to add points.

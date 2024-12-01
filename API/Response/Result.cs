@@ -1,8 +1,10 @@
 using System.Text.Json.Serialization;
 
-namespace FetchPoints.Response {
+using FetchPoints.Entity;
 
-    public class ApiResponse
+namespace FetchPoints.API.Response {
+
+    public class Result
     {
 
         [JsonPropertyName("id")]
@@ -17,19 +19,19 @@ namespace FetchPoints.Response {
         [JsonPropertyName("points")]
         public int Points { get; }
 
-        internal ApiResponse(string id, bool isValid, string errorMessage, int points) {
+        internal Result(string id, bool isValid, string errorMessage, int points) {
             Id = id;
             IsValid = isValid;
             ErrorMessage = errorMessage;
             Points = points;
         }
 
-        public static ApiResponse CreateErrorResponse(string errorMessage) {
-            return new ApiResponse(null, false, errorMessage, 0);
+        public static Result CreateErrorResponse(string errorMessage) {
+            return new Result(null, false, errorMessage, 0);
         }
 
-        public static ApiResponse CreateSuccessfulResponse(string id, int points) {
-            return new ApiResponse(id, true, null, points);
+        public static Result CreateSuccessfulResponse(ValidatedTransaction transaction) {
+            return new Result(transaction.Id(), true, null, transaction.Points());
         }
     }
 

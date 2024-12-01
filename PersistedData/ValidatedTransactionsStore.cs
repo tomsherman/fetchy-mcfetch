@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using FetchPoints.DataClass;
+using FetchPoints.Entity;
 
 namespace FetchPoints.PersistedData
 {
