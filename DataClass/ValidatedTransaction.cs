@@ -76,6 +76,10 @@ namespace FetchPoints.DataClass {
             return $"Spent ${Total} at {Retailer}";
         }
 
+        public int Points() {
+            return 42;
+        }
+
     }
 
     public class ValidatedTransactionItem {
