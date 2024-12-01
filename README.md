@@ -20,3 +20,8 @@
 ## TODO
 - More elegant error handling
 - Tests
+
+
+TODO add note about time assumptions
+
+TODO Normalize error payload

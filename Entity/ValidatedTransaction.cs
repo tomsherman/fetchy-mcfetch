@@ -1,10 +1,13 @@
 using System;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Text;
+using System.Security.Cryptography;
 
 using FetchPoints.API.Request;
 using FetchPoints.Entity.PointsRules;
 using FetchPoints.API.Exception;
+using Microsoft.VisualBasic;
 
 namespace FetchPoints.Entity {
 
@@ -39,7 +42,8 @@ namespace FetchPoints.Entity {
             DateTime timestamp;
             var dateTimeText = receipt.PurchaseDate + " " + receipt.PurchaseTime;
             var dateTimeFormat = "yyyy-MM-dd HH:mm";
-            // TODO add note about time assumptions
+
+            // assume local time 
             var validDate = DateTime.TryParseExact(dateTimeText, dateTimeFormat, new CultureInfo("en-US"), DateTimeStyles.AssumeLocal, out timestamp);
             if (!validDate) {
                 throw new InvalidReceipt("Invalid date or time");
@@ -48,13 +52,6 @@ namespace FetchPoints.Entity {
             if (timestamp > DateTime.Now) {
                 throw new InvalidReceipt("Date cannot be in the future");
             }
-
-/*
-            string retailer = receipt.Retailer.Trim();
-            if (retailer.Length == 0) {
-                throw new ArgumentException("Invalid retailer");
-            }
-    */
 
             var items = new List<ValidatedTransactionItem>();
             foreach (var item in receipt.Items) {
@@ -84,8 +81,25 @@ namespace FetchPoints.Entity {
 
         // Unique ID for receipt; deterministic
         public string Id() {
-            // TODO need to implement deterministic scheme
-            return $"Spent ${Total} at {Retailer}";
+            return sha256_hash(this.ToString());
+        }
+
+        public override string ToString() {
+            var builder = new StringBuilder();
+
+            builder.Append("Retailer: " + Retailer);
+            builder.Append(ControlChars.NewLine);
+            builder.Append("Timestamp: " + Timestamp);
+            builder.Append(ControlChars.NewLine);
+            builder.Append("Total: " + Total);
+            builder.Append(ControlChars.NewLine);
+
+            Items.ForEach(item => {
+                builder.Append("  " + item.ToString()); 
+                builder.Append(ControlChars.NewLine);
+            });
+
+            return builder.ToString();
         }
 
         public int Points() {
@@ -98,6 +112,21 @@ namespace FetchPoints.Entity {
             return points;
         }
 
+        public static string sha256_hash(string value)
+        {
+            StringBuilder builder = new StringBuilder();
+
+            using (var hash = SHA256.Create())
+            {
+                Encoding enc = Encoding.UTF8;
+                byte[] result = hash.ComputeHash(enc.GetBytes(value));
+
+                foreach (byte b in result) builder.Append(b.ToString("x2"));
+            }
+
+            return builder.ToString();
+        }
+
     }
 
     public class ValidatedTransactionItem {
@@ -107,6 +136,10 @@ namespace FetchPoints.Entity {
         public ValidatedTransactionItem(string shortDescription, double price) {
             ShortDescription = shortDescription;
             Price = price;
+        }
+
+        public override string ToString() {
+            return ShortDescription + ": " + Price;
         }
     }
 
