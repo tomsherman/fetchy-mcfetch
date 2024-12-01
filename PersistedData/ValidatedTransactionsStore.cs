@@ -30,6 +30,10 @@ namespace FetchPoints.PersistedData
             validatedTransactions.Add(transaction.Id(), transaction);
         }
 
+        internal static bool has(ValidatedTransaction transaction) {
+            return validatedTransactions.ContainsKey(transaction.Id());
+        }
+
         internal static void clearData()
         {
             validatedTransactions = new Dictionary<string, ValidatedTransaction>();
