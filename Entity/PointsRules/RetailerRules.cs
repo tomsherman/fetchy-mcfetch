@@ -1,7 +1,7 @@
 using System.Text.RegularExpressions;
 
 namespace FetchPoints.Entity.PointsRules {
-    public class RetailerRules : IPointsRule
+    internal class RetailerRules : IPointsRule
     {
         Regex alphanumericRegex = new Regex("[^a-zA-Z0-9]", RegexOptions.Compiled);
 

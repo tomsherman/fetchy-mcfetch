@@ -1,27 +1,23 @@
-# fetchy-mcfetch
+# fetchy-mcfetch-points
 
-- This project was developed to solve a [coding challenge](https://fetch-hiring.s3.us-east-1.amazonaws.com/points.pdf) from [Fetch Rewards](https://fetchrewards.com/).
+- This project was developed to solve Fetch's [coding challenge](https://github.com/fetch-rewards/receipt-processor-challenge).
 
 ## Implementation
-- [Swagger documentation](https://fetch-points20210919001315.azurewebsites.net/)
-- [API base endpoint](https://fetch-points20210919001315.azurewebsites.net/api/points)
+- [Swagger documentation](https://fetchy-mcfetch-points.azurewebsites.net/)
+- [API base endpoint](https://fetchy-mcfetch-points.azurewebsites.net/api/)
   - Use standard HTTP verbs to interact with the API
   - Generate requests from the Swagger documentation or use a tool like [Postman](https://www.postman.com/) (don't forget to set your `Content-Type` as `application/json`).
 
-## API notes
-- API follows the spirit of HTTP verbs:
-  - `GET` returns current balances by payer
-  - `POST` is used to spend points
-  - `PUT` offers 2 idempotent methods:
-    - Add a credit assigned to a given payer with a specific timestamp
-    - Clear any existing data and populates example data provided in points.pdf
-  - `DELETE` clears all points
+## Assumptions
+
+The challenge is open-ended in certain respects. I made these assumptions:
+- Time is local to the server instance.
+- A specific receipt can be submitted at most once.
+- A receipt can be unique identified by the combination of the retailer, date and time of purchase, total, and items.
+
+## Potential enhancements
+- Normalize error payloads. Depending on the type of error, the shape of the returned value varies.
 
 ## TODO
 - More elegant error handling
 - Tests
-
-
-TODO add note about time assumptions
-
-TODO Normalize error payload

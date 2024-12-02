@@ -1,5 +1,5 @@
 namespace FetchPoints.Entity.PointsRules {
-    public class TransactionAmountRules : IPointsRule
+    internal class TransactionAmountRules : IPointsRule
     {
         public int Apply(ValidatedTransaction transaction)
         {

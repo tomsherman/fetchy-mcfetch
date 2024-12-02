@@ -1,7 +1,7 @@
 using System;
 
 namespace FetchPoints.Entity.PointsRules {
-    public class ItemRules : IPointsRule
+    internal class ItemRules : IPointsRule
     {
         public int Apply(ValidatedTransaction transaction)
         {

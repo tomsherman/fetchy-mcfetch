@@ -28,12 +28,12 @@ namespace FetchPoints.API.Request
 
         [JsonPropertyName("items")]
         [Required]
-        [MinLength(1)]
+        [MinLength(1, ErrorMessage = "Receipt must contain at least one item")]
         public List<Item> Items { get; set; }
 
         [JsonPropertyName("total")]
         [Required]
-        [Range(0.01, int.MaxValue)]
+        [Range(0.01, int.MaxValue, ErrorMessage = "Receipt total must be positive number")]
         public string Total { get; set; }
     }
 
