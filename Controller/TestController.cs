@@ -7,7 +7,7 @@ using FetchPoints.Tests;
 
 namespace FetchPoints.Controller
 {
-    [Route("api/[controller]")]
+    [Route("api/test")]
     [ApiController]
     public class TestController : ControllerBase
     {
