@@ -9,17 +9,19 @@ namespace FetchPoints.Tests {
         public static List<TestResult> RunTests() {
             var results = new List<TestResult>
             {
+                // invalid receipt input failures
+                // test parse failures
+                getInvalidTimeFailureResult(),
+                getNoItemsParseFailureResult(),
+                getFutureDateFailureResult(),
+                getMismatchedTotalFailureResult(),
+
+                // test points rules
                 getBaselineSuccessResult(),
                 getRoundNumberTotalSuccessResult(),
                 getPoint25MultipleTotalSuccessResult(),
                 get8ItemReceiptSuccessResult(),
                 get9ItemReceiptSuccessResult(),
-
-                // invalid receipt input failures
-                getInvalidTimeFailureResult(),
-                getNoItemsParseFailureResult(),
-                getFutureDateFailureResult(),
-                getMismatchedTotalFailureResult(),
                 getOddDayDateResult(),
                 getAfternoonPurchaseTestresult(),
                 getMultiplierOf3ItemDescriptionTestResult(),
