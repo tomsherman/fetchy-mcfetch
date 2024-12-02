@@ -17,7 +17,4 @@ The challenge is open-ended in certain respects. I made these assumptions:
 
 ## Potential enhancements
 - Normalize error payloads. Depending on the type of error, the shape of the returned value varies.
-
-## TODO
-- More elegant error handling
-- Tests
+- Clean up testing code; it ended up pretty clunky :/

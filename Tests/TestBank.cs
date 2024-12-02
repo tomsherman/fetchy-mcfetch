@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using System.Text.Json;
 using FetchPoints.API.Request;
 using FetchPoints.Entity;
-using Microsoft.AspNetCore.Http.Features;
 
 namespace FetchPoints.Tests {
     public class TestBank {

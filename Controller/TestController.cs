@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System;
 using System.Text;
-using System.Collections.Generic;
 
 using FetchPoints.Tests;
 
