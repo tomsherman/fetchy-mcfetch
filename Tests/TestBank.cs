@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text.Json;
 using FetchPoints.API.Request;
 using FetchPoints.Entity;
 
@@ -11,20 +10,23 @@ namespace FetchPoints.Tests {
             {
                 // invalid receipt input failures
                 // test parse failures
-                getInvalidTimeFailureResult(),
-                getNoItemsParseFailureResult(),
-                getFutureDateFailureResult(),
-                getMismatchedTotalFailureResult(),
+                invalidTime(),
+                invalidDate(),
+                noItems(),
+                futureDate(),
+                mismatchedTotal(),
 
                 // test points rules
-                getBaselineSuccessResult(),
-                getRoundNumberTotalSuccessResult(),
-                getPoint25MultipleTotalSuccessResult(),
-                get8ItemReceiptSuccessResult(),
-                get9ItemReceiptSuccessResult(),
-                getOddDayDateResult(),
-                getAfternoonPurchaseTestresult(),
-                getMultiplierOf3ItemDescriptionTestResult(),
+                baseCase(),
+                givenExample1(),
+                givenExample2(),
+                roundNumberTotal(),
+                multipleOfDot25Total(),
+                receiptWith8Items(),
+                receiptWith9Items(),
+                oddNumberedDay(),
+                afternoonPurchase(),
+                multipleOf3itemStringLength(),
             };
 
             return results;
@@ -32,53 +34,34 @@ namespace FetchPoints.Tests {
 
 # region "Test cases: Expected parse failures"
 
-        private static TestResult getNoItemsParseFailureResult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult noItems() {
+            var receipt = baseline10pointReceipt();
             receipt.Items.Clear(); // no items on receipt
-            TestResult result = TestResult.CreateExpectedFailureTestResult("No items present", receipt);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedFailure("No items present", receipt);
         }
 
-        private static TestResult getMismatchedTotalFailureResult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult mismatchedTotal() {
+            var receipt = baseline10pointReceipt();
             receipt.Total = "892323423.22";
-            TestResult result = TestResult.CreateExpectedFailureTestResult("Item total does not match overall total", receipt);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedFailure("Item total does not match overall total", receipt);
         }
 
-
-        private static TestResult getFutureDateFailureResult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult futureDate() {
+            var receipt = baseline10pointReceipt();
             receipt.PurchaseDate = "2050-01-01";
-            TestResult result = TestResult.CreateExpectedFailureTestResult("Receipt date in the future", receipt);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedFailure("Receipt date in the future", receipt);
         }
 
-        private static TestResult getInvalidTimeFailureResult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult invalidTime() {
+            var receipt = baseline10pointReceipt();
             receipt.PurchaseTime = "1:00 PM";
-            TestResult result = TestResult.CreateExpectedFailureTestResult("Invalid time", receipt);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedFailure("Invalid time", receipt);
+        }
+
+        private static TestResult invalidDate() {
+            var receipt = baseline10pointReceipt();
+            receipt.PurchaseDate = "2024-02-30";
+            return TestRunner.RunExpectedFailure("Invalid date", receipt);
         }
 
 #endregion
@@ -97,9 +80,8 @@ namespace FetchPoints.Tests {
 
 */
 
-
-        private static TestResult getBaselineSuccessResult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult baseCase() {
+            var receipt = baseline10pointReceipt();
             TestResult result = TestResult.CreateExpectedSuccessTestResult("Baseline 10-point receipt", receipt, 10);
             try {
                 result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
@@ -109,7 +91,7 @@ namespace FetchPoints.Tests {
             return result;
         }
 
-        private static TestResult getRoundNumberTotalSuccessResult() {
+        private static TestResult roundNumberTotal() {
             var items = new List<Item>() {
                 new() {
                     ShortDescription = "x",
@@ -120,42 +102,30 @@ namespace FetchPoints.Tests {
                     Price = "0.48",
                 }
             };
-            var receipt = getBaseReceiptNoBonuses(items);
+            var receipt = baseCaseReceiptNoBonuses10points(items);
 
             // 10 points baseline
             // 50 points for whole number total
             // 25 points for being a multiple of 0.25
             // 5 points because there are two items on the receipt
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("Round dollar amount total", receipt, 90);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("Round dollar amount total", receipt, 90);
         }
 
-        private static TestResult getPoint25MultipleTotalSuccessResult() {
+        private static TestResult multipleOfDot25Total() {
             var items = new List<Item>() {
                 new() {
                     ShortDescription = "y",
                     Price = "0.25",
                 }
             };
-            var receipt = getBaseReceiptNoBonuses(items);
+            var receipt = baseCaseReceiptNoBonuses10points(items);
 
             // 10 points baseline
             // 25 points for being a multiple of 0.25
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("Total is multiple of 0.25", receipt, 35);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("Total is multiple of 0.25", receipt, 35);
         }
 
-        private static TestResult get8ItemReceiptSuccessResult() {
+        private static TestResult receiptWith8Items() {
             var items = new List<Item>();
             for (var i=0; i<8; i++) {
                 items.Add(
@@ -165,20 +135,14 @@ namespace FetchPoints.Tests {
                 });
             }
 
-            var receipt = getBaseReceiptNoBonuses(items);
+            var receipt = baseCaseReceiptNoBonuses10points(items);
 
             // 10 points baseline
             // 5 points for every two items on the receipt
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("8-item receipt", receipt, 30);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("8-item receipt", receipt, 30);
         }
 
-        private static TestResult get9ItemReceiptSuccessResult() {
+        private static TestResult receiptWith9Items() {
             var items = new List<Item>();
             for (var i=0; i<9; i++) {
                 items.Add(
@@ -188,52 +152,33 @@ namespace FetchPoints.Tests {
                 });
             }
 
-            var receipt = getBaseReceiptNoBonuses(items);
+            var receipt = baseCaseReceiptNoBonuses10points(items);
 
             // 10 points baseline
             // 5 points for every two items on the receipt
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("9-item receipt", receipt, 30);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("9-item receipt", receipt, 30);
         }
 
-        private static TestResult getOddDayDateResult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult oddNumberedDay() {
+            var receipt = baseline10pointReceipt();
             receipt.PurchaseDate = "2024-12-01";
-
 
             // 10 points baseline
             // 6 points if the day in the purchase date is odd.
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("Transaction date with odd-numbered day", receipt, 16);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("Transaction date with odd-numbered day", receipt, 16);
         }
 
-        private static TestResult getAfternoonPurchaseTestresult() {
-            var receipt = get10pointBaseReceipt();
+        private static TestResult afternoonPurchase() {
+            var receipt = baseline10pointReceipt();
             receipt.PurchaseTime = "15:30";
 
             // 10 points baseline
             // 10 points if the time of purchase is after 2:00pm and before 4:00pm.
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("Transaction date with afternoon purchase getting bonus", receipt, 20);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("Transaction date with afternoon purchase getting bonus", receipt, 20);
         }
 
         // If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer. The result is the number of points earned.
-        private static TestResult getMultiplierOf3ItemDescriptionTestResult() {
+        private static TestResult multipleOf3itemStringLength() {
             var items = new List<Item>
             {
                 new Item()
@@ -253,23 +198,79 @@ namespace FetchPoints.Tests {
                 },
             };
 
-            var receipt = getBaseReceiptNoBonuses(items);
+            var receipt = baseCaseReceiptNoBonuses10points(items);
 
             // 10 points baseline
             // 5 points for every two items on the receipt.
             // If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer. The result is the number of points earned.
-            TestResult result = TestResult.CreateExpectedSuccessTestResult("3-item transaction with 2 of the items getting string length bonuses", receipt, 19);
-            try {
-                result.ActualPoints = ValidatedTransaction.Create(receipt).Points();
-            } catch(Exception ex) {
-                result.ErrorDetail = ex.Message;
-            }
-            return result;
+            return TestRunner.RunExpectedSuccess("3-item transaction with 2 of the items getting string length bonuses", receipt, 19);
+        }
+
+        private static TestResult givenExample1() {
+            var receipt = new Receipt() {
+                Retailer = "Target",
+                PurchaseDate = "2022-01-01",
+                PurchaseTime = "13:01",
+                Items = [
+                    new() {
+                        ShortDescription = "Mountain Dew 12PK",
+                        Price = "6.49"
+                    },
+                    new() {
+                        ShortDescription = "Emils Cheese Pizza",
+                        Price = "12.25"
+                    },
+                    new() {
+                        ShortDescription = "Knorr Creamy Chicken",
+                        Price = "1.26"
+                    },
+                    new() {
+                        ShortDescription = "Doritos Nacho Cheese",
+                        Price = "3.35"
+                    },
+                    new() {
+                        ShortDescription = "   Klarbrunn 12-PK 12 FL OZ  ",
+                        Price = "12.00"
+                    },
+                ],
+                Total = "35.35"
+            };
+
+            return TestRunner.RunExpectedSuccess("First provided example (\"Food from Target\")", receipt, 28);
+        }
+
+        private static TestResult givenExample2() {
+            var receipt = new Receipt() {
+                Retailer = "M&M Corner Market",
+                PurchaseDate = "2022-03-20",
+                PurchaseTime = "14:33",
+                Items = [
+                    new() {
+                        ShortDescription = "Gatorade",
+                        Price = "2.25"
+                    },
+                    new() {
+                        ShortDescription = "Gatorade",
+                        Price = "2.25"
+                    },
+                    new() {
+                        ShortDescription = "Gatorade",
+                        Price = "2.25"
+                    },
+                    new() {
+                        ShortDescription = "Gatorade",
+                        Price = "2.25"
+                    },
+                ],
+                Total = "9.00"
+            };
+
+            return TestRunner.RunExpectedSuccess("Second provided example (\"Gatorade from M&M Corner Market\")", receipt, 109);
         }
 
 #endregion
 
-        private static Receipt get10pointBaseReceipt() {
+        private static Receipt baseline10pointReceipt() {
             var baseItem = new Item() {
                 ShortDescription = "blah",
                 Price = "1.01",
@@ -285,7 +286,7 @@ namespace FetchPoints.Tests {
             return baseReceipt;
         }
 
-        private static Receipt getBaseReceiptNoBonuses(List<Item> items) {
+        private static Receipt baseCaseReceiptNoBonuses10points(List<Item> items) {
             var baseReceipt = new Receipt() {
                 Retailer = "TenDigitsX", // 10 points
                 PurchaseDate = "2024-02-02",
@@ -303,45 +304,4 @@ namespace FetchPoints.Tests {
         }
     }
 
-    public class TestResult {
-        public string Description { get; }
-        public bool Success {
-            get {
-                if (ExpectedToSucceed && ActualPoints == ExpectedPoints) return true;
-                if (!ExpectedToSucceed && !string.IsNullOrEmpty(ErrorDetail)) return true;
-                return false;
-            }
-        }
-
-        internal string InputReceiptJSON { get; }
-        internal string ErrorDetail { get; set; }
-
-        internal int ExpectedPoints { get; }
-        internal bool ExpectedToSucceed { get; }
-        internal int ActualPoints { get; set; }
-
-        // Constructor for expected success
-        private TestResult(string description, Receipt receipt, int expectedPoints) {
-            Description = description;
-            ExpectedPoints = expectedPoints;
-            InputReceiptJSON = JsonSerializer.Serialize(receipt);
-            ExpectedToSucceed = true;
-        }
-
-        // Comstructor for expected failure
-        private TestResult(string description, Receipt receipt) {
-            Description = description;
-            ExpectedPoints = int.MinValue;
-            InputReceiptJSON = JsonSerializer.Serialize(receipt);
-            ExpectedToSucceed = false;
-        }
-
-        internal static TestResult CreateExpectedSuccessTestResult(string description, Receipt receipt, int expectedPoints) {
-            return new TestResult(description, receipt, expectedPoints);
-        }
-
-        internal static TestResult CreateExpectedFailureTestResult(string description, Receipt receipt) {
-            return new TestResult(description, receipt);
-        }
-    }
 }

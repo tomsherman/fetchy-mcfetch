@@ -25,10 +25,11 @@ namespace FetchPoints.Controller
                         builder.AppendLine($"  Expected points: {result.ExpectedPoints}, actual points: {result.ActualPoints}");
                     }
                     if (!string.IsNullOrEmpty(result.ErrorDetail)) builder.AppendLine($"  Error: {result.ErrorDetail}");
+                    if (!string.IsNullOrEmpty(result.ExceptionType)) builder.AppendLine($"  Exception type: {result.ExceptionType}");
                     builder.AppendLine();
                 });
             } catch(Exception) {
-                HttpContext.Response.StatusCode = 500;
+                HttpContext.Response.StatusCode = 500; 
             }
             return builder.ToString();
         }

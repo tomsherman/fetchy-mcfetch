@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace FetchPoints.API.Request
@@ -12,7 +13,7 @@ namespace FetchPoints.API.Request
     {
         [JsonPropertyName("retailer")]
         [Required]
-        [RegularExpression("^.*\\w.*$")]
+        [RegularExpression("^[\\w\\s\\-&]+$")]
         public string Retailer { get; set; }
 
         [JsonPropertyName("purchaseDate")]
@@ -22,7 +23,7 @@ namespace FetchPoints.API.Request
 
         [JsonPropertyName("purchaseTime")]
         [Required]
-        [RegularExpression("^\\d{2}:\\d{2}$", ErrorMessage = "Invalid time format. Use HH:MM, e.g. 13:01")]
+        [RegularExpression("^\\d{1,2}:\\d{2}$", ErrorMessage = "Invalid time format. Use HH:MM, e.g. 13:01")]
         public string PurchaseTime { get; set; }
 
         [JsonPropertyName("items")]
@@ -40,7 +41,7 @@ namespace FetchPoints.API.Request
     {
         [JsonPropertyName("shortDescription")]
         [Required]
-        [RegularExpression("^.*\\w.*")]
+        [RegularExpression("^[\\w\\s\\-]+$")]
         public string ShortDescription { get; set; }
 
         [JsonPropertyName("price")]
